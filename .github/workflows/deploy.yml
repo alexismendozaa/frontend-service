@@ -24,7 +24,8 @@ jobs:
 
     - name: List frontend directory (for debugging)
       run: |
-        ls -la ./frontend  # Listar los archivos para asegurarse de que el Dockerfile esté en el directorio frontend
+        echo "Listing contents of frontend directory"
+        ls -la ./frontend  # Lista los archivos para asegurarse de que el Dockerfile esté en el directorio frontend
 
     - name: Build and push frontend Docker image
       run: |

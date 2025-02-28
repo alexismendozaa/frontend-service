@@ -9,17 +9,8 @@ RUN npm install
 # Copiar el código fuente
 COPY . .
 
-# Ejecutar el comando de construcción para generar archivos estáticos
-RUN npm run build  # Esto genera los archivos estáticos en la carpeta 'dist/'
+# Exponer el puerto en el que se ejecutará el servidor de desarrollo (usualmente 3000 o 8080)
+EXPOSE 8080
 
-# Etapa de producción con Nginx
-FROM nginx:alpine
-
-# Copiar los archivos generados de la carpeta 'dist' a la carpeta de Nginx
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Exponer el puerto de Nginx (80 por defecto)
-EXPOSE 80
-
-# Ejecutar Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Comando para ejecutar el servidor de desarrollo de Vite (o Webpack)
+CMD ["npm", "run", "dev"]

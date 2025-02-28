@@ -29,12 +29,13 @@ jobs:
 
     - name: Build and push frontend Docker image
       run: |
-        docker build -t alexismendozaa/delishub-frontend:latest ./DelisHub/frontend
+        # Especifica explícitamente la ruta del Dockerfile
+        docker build -t alexismendozaa/delishub-frontend:latest -f ./frontend/Dockerfile ./frontend
         docker push alexismendozaa/delishub-frontend:latest
 
     - name: Build and push backend Docker image
       run: |
-        docker build -t alexismendozaa/delishub-backend:latest ./DelisHub/backend
+        docker build -t alexismendozaa/delishub-backend:latest ./backend
         docker push alexismendozaa/delishub-backend:latest
 
     - name: Copy private key for SSH access

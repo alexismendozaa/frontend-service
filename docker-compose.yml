@@ -10,17 +10,17 @@ services:
       - ./backend/.env
     depends_on:
       - db
-    command: ["node", "src/server.js"]  # Asegúrate de que se ejecute en modo desarrollo
+    command: ["node", "src/server.js"]
 
   frontend:
     build:
       context: ./frontend
     ports:
-      - "80:80"  # Este es el puerto de Nginx
+      - "80:80"    # Nginx estará escuchando en el puerto 80
       - "5173:5173"  # Mapea el puerto 5173 del contenedor al puerto 5173 del host
     depends_on:
       - backend
-    command: ["npm", "run", "dev"]  # Asegúrate de que se ejecute en modo desarrollo
+    command: ["npm", "run", "dev"]
 
   db:
     image: postgres:14

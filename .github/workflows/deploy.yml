@@ -27,13 +27,10 @@ jobs:
         echo "Listing contents of frontend directory"
         ls -la ./frontend  # Verificar que el Dockerfile esté presente
 
-    - name: Set the working directory for frontend
-      run: |
-        cd ./frontend  # Cambia al directorio frontend para asegurarse de que el Dockerfile se encuentre correctamente
-
     - name: Build and push frontend Docker image
       run: |
-        docker build -t alexismendozaa/delishub-frontend:latest -f ./Dockerfile .  # Construir imagen usando el Dockerfile del frontend
+        # Confirmamos que la ruta esté correctamente especificada
+        docker build -t alexismendozaa/delishub-frontend:latest -f frontend/Dockerfile frontend
         docker push alexismendozaa/delishub-frontend:latest
 
     - name: List backend directory (for debugging)
@@ -43,7 +40,7 @@ jobs:
 
     - name: Build and push backend Docker image
       run: |
-        docker build -t alexismendozaa/delishub-backend:latest -f ./backend/Dockerfile ./backend
+        docker build -t alexismendozaa/delishub-backend:latest -f backend/Dockerfile backend
         docker push alexismendozaa/delishub-backend:latest
 
     - name: Copy private key for SSH access

@@ -6,15 +6,17 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Copiar el código fuente y construir la aplicación
+# Copiar el código fuente
 COPY . .
-RUN npm run build  # Esto genera los archivos estáticos
+
+# Ejecutar el comando de construcción para generar archivos estáticos
+RUN npm run build  # Esto genera los archivos estáticos en la carpeta 'dist/'
 
 # Etapa de producción con Nginx
 FROM nginx:alpine
 
-# Copiar los archivos generados a la carpeta adecuada de Nginx
-COPY --from=builder /app/build /usr/share/nginx/html
+# Copiar los archivos generados de la carpeta 'dist' a la carpeta de Nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Exponer el puerto de Nginx (80 por defecto)
 EXPOSE 80

@@ -2,32 +2,22 @@
 FROM node:18 AS builder
 WORKDIR /app
 
-# Copiar los archivos de configuración de dependencias
+# Copiar archivos de dependencias e instalar
 COPY package*.json ./
-
-# Instalar las dependencias necesarias
 RUN npm install
 
-# Copiar todo el código fuente
+# Copiar el código fuente y construir la aplicación
 COPY . .
+RUN npm run build  # Esto genera los archivos estáticos
 
-# Ejecutar el comando para construir la aplicación (si es necesario)
-# RUN npm run build  # Esto puede ser innecesario si solo ejecutamos `npm run dev`
+# Etapa de producción con Nginx
+FROM nginx:alpine
 
-# Exponer el puerto en el que la aplicación de desarrollo se ejecuta
-EXPOSE 8080
+# Copiar los archivos generados a la carpeta adecuada de Nginx
+COPY --from=builder /app/build /usr/share/nginx/html
 
-# Etapa de producción
-# Usar Node.js para desarrollo, ya que Nginx es para producción estática
-FROM node:18
+# Exponer el puerto de Nginx (80 por defecto)
+EXPOSE 80
 
-WORKDIR /app
-
-# Copiar archivos de dependencias e instalar
-COPY --from=builder /app /app
-
-# Exponer el puerto de la aplicación frontend (8080 es común para el desarrollo)
-EXPOSE 8080
-
-# Comando para ejecutar el frontend en modo desarrollo
-CMD ["npm", "run", "dev"]
+# Ejecutar Nginx
+CMD ["nginx", "-g", "daemon off;"]

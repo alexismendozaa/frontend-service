@@ -16,8 +16,8 @@ services:
     build:
       context: ./frontend
     ports:
-      - "80:80"    # Nginx estará escuchando en el puerto 80
-      - "5173:5173"  # Mapea el puerto 5173 del contenedor al puerto 5173 del host
+      - "80:80"  # Puerto expuesto para Nginx (si está en producción)
+      - "5173:5173"  # Mapear el puerto 5173 de Vite para desarrollo
     depends_on:
       - backend
     command: ["npm", "run", "dev"]

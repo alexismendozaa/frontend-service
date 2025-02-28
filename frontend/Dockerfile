@@ -9,8 +9,8 @@ RUN npm install
 # Copiar el código fuente
 COPY . .
 
-# Exponer el puerto en el que se ejecutará el servidor de desarrollo (usualmente 3000 o 8080)
-EXPOSE 8080
+# Exponer el puerto de desarrollo (puerto de Vite)
+EXPOSE 5173
 
-# Comando para ejecutar el servidor de desarrollo de Vite (o Webpack)
+# Ejecutar el servidor de desarrollo
 CMD ["npm", "run", "dev"]

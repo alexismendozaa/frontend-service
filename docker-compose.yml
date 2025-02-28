@@ -16,11 +16,11 @@ services:
     build:
       context: ./frontend
     ports:
-      - "80:80"    # Nginx puerto
-      - "5173:5173"  # Mapea el puerto 5173 del contenedor al host
+      - "80:80"    # Nginx para producción
+      - "5173:5173"  # Mapea el puerto 5173 para desarrollo de Vite
     depends_on:
       - backend
-    command: ["npm", "run", "dev"]  # Ejecutar Vite en desarrollo
+    command: ["npm", "run", "dev"]  # Ejecutar Vite en modo desarrollo
 
   db:
     image: postgres:14

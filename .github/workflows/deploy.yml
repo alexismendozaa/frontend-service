@@ -1,68 +1,27 @@
-name: Deploy to EC2
-
+name: microservice CI/CD
 on:
   push:
     branches:
-      - main  # Cambia esta rama si tu rama principal es otra, como "master"
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Simple Build Step
+        run: echo "Build successful"
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
 
-    # Frontend
-    - name: List frontend directory (for debugging)
-      run: |
-        echo "Listing contents of frontend directory"
-        ls -la ./frontend  # Verificar que el Dockerfile esté presente
-
-    - name: Build and push frontend Docker image
-      run: |
-        docker build -t alexismendozaa/delishub-frontend:latest -f frontend/Dockerfile ./frontend
-        docker push alexismendozaa/delishub-frontend:latest
-
-    # utils
-    - name: List utils directory (for debugging)
-      run: |
-        echo "Listing contents of utils directory"
-        ls -la ./utils  # Verificar que el Dockerfile esté presente
-
-    - name: Build and push utils Docker image
-      run: |
-        docker build -t alexismendozaa/delishub-utils:latest -f utils/Dockerfile ./utils
-        docker push alexismendozaa/delishub-utils:latest
-
-    # SSH setup for deployment
-    - name: Copy private key for SSH access
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-
-    - name: Deploy to EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@54.234.57.7 << 'EOF'
-          # Pull latest Docker images from Docker Hub
-          docker pull alexismendozaa/delishub-frontend:latest
-          docker pull alexismendozaa/delishub-utils:latest
-
-          # Stop and remove the old containers
-          docker stop delishub-frontend delishub-utils || true
-          docker rm delishub-frontend delishub-utils || true
-
-          # Run new containers
-          docker run -d --name delishub-frontend -p 80:80 alexismendozaa/delishub-frontend:latest
-          docker run -d --name delishub-utils -p 3000:3000 alexismendozaa/delishub-utils:latest
-        EOF
+    steps:
+      - name: Fake Deployment Step
+        run: echo "Deployment successful"

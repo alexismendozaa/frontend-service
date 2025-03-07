@@ -33,16 +33,16 @@ jobs:
         docker build -t alexismendozaa/delishub-frontend:latest -f frontend/Dockerfile ./frontend
         docker push alexismendozaa/delishub-frontend:latest
 
-    # Backend
-    - name: List backend directory (for debugging)
+    # utils
+    - name: List utils directory (for debugging)
       run: |
-        echo "Listing contents of backend directory"
-        ls -la ./backend  # Verificar que el Dockerfile esté presente
+        echo "Listing contents of utils directory"
+        ls -la ./utils  # Verificar que el Dockerfile esté presente
 
-    - name: Build and push backend Docker image
+    - name: Build and push utils Docker image
       run: |
-        docker build -t alexismendozaa/delishub-backend:latest -f backend/Dockerfile ./backend
-        docker push alexismendozaa/delishub-backend:latest
+        docker build -t alexismendozaa/delishub-utils:latest -f utils/Dockerfile ./utils
+        docker push alexismendozaa/delishub-utils:latest
 
     # SSH setup for deployment
     - name: Copy private key for SSH access
@@ -56,13 +56,13 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@54.234.57.7 << 'EOF'
           # Pull latest Docker images from Docker Hub
           docker pull alexismendozaa/delishub-frontend:latest
-          docker pull alexismendozaa/delishub-backend:latest
+          docker pull alexismendozaa/delishub-utils:latest
 
           # Stop and remove the old containers
-          docker stop delishub-frontend delishub-backend || true
-          docker rm delishub-frontend delishub-backend || true
+          docker stop delishub-frontend delishub-utils || true
+          docker rm delishub-frontend delishub-utils || true
 
           # Run new containers
           docker run -d --name delishub-frontend -p 80:80 alexismendozaa/delishub-frontend:latest
-          docker run -d --name delishub-backend -p 3000:3000 alexismendozaa/delishub-backend:latest
+          docker run -d --name delishub-utils -p 3000:3000 alexismendozaa/delishub-utils:latest
         EOF
